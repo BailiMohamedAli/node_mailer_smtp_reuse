@@ -21,5 +21,10 @@ app.get('/sendmail', (req, res) => {
     nav.local = 'sendMail'
     res.render('pages/sendmail', { nav: nav });
 })
+app.post('/send/mail', (req, res) => {
+    console.log(req.body);
+    nav.local = 'sendMail'
+    res.redirect('/sendmail');
+})
 
 app.listen( PORT, () => console.log(`server running on: \nhttp://localhost:${PORT}`));

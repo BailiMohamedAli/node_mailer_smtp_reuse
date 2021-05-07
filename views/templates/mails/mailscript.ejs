@@ -1,8 +1,11 @@
 <script>
-    function sendMail(){
+    function sendMail(event) {
         var send_to = document.getElementById("send_to").value;
         var subject = document.getElementById("subject").value;
         var message = document.getElementById("message").value;
-        
+        if(send_to === '' || subject === '' || message === ''){
+            event.preventDefault();
+            alert("please check your data some inputs are missing");
+        }
     }
 </script>
