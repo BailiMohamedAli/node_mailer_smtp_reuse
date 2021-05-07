@@ -1,0 +1,24 @@
+{
+  "name": "node_mailer_smtp_reuse",
+  "version": "1.0.0",
+  "description": "this is reauseble boiler plate for DRY",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BailiMohamedAli/node_mailer_smtp_reuse.git"
+  },
+  "author": "Mohamed Ali Baili",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BailiMohamedAli/node_mailer_smtp_reuse/issues"
+  },
+  "homepage": "https://github.com/BailiMohamedAli/node_mailer_smtp_reuse#readme",
+  "dependencies": {
+    "dotenv": "^9.0.0",
+    "express": "^4.17.1",
+    "nodemailer": "^6.6.0"
+  }
+}
