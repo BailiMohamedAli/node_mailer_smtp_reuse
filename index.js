@@ -1,6 +1,9 @@
 const express = require("express");
 const app = express();
 const path = require("path");
+//mailer config
+const nodemailer = require('nodemailer');
+require('dotenv').config();
 
 const PORT = 3001;
 //data utilities
@@ -21,10 +24,30 @@ app.get('/sendmail', (req, res) => {
     nav.local = 'sendMail'
     res.render('pages/sendmail', { nav: nav });
 })
-app.post('/send/mail', (req, res) => {
+app.post('/send/mail', async (req, res) => {
     console.log(req.body);
     nav.local = 'sendMail'
-    res.redirect('/sendmail');
+    const transporter = nodemailer.createTransport({
+        host: "smtp.office365.com",
+        port: 587,
+        auth: {
+            user: process.env.EMAIL_USERNAME,
+            pass: process.env.EMAIL_PASSWORD
+        }
+    });
+    const options = {
+        from: process.env.EMAIL_USERNAME,
+        to : req.body.send_to,
+        subject: req.body.subject,
+        text: req.body.message
+    };
+    try{
+        const send = await transporter.sendMail(options);
+        if(!send) throw Error ("send mail failed !");
+        res.status(200).redirect('/sendmail');
+    } catch(err){
+        res.status(500).json({message: err});
+    }
 })
 
 app.listen( PORT, () => console.log(`server running on: \nhttp://localhost:${PORT}`));
