@@ -1,0 +1,22 @@
+<div class="w3-top w3-bar w3-white w3-wide w3-padding w3-card">
+    <a onClick="newpath()" class="w3-bar-item w3-button"
+      ><b>SMTP</b> mailing <span>|Nodemailer|</span>
+    </a>
+    <!-- Float links to the right. Hide them on small screens -->
+    <div class="w3-right">
+      <!-- home -->
+      <% if (nav.local !== 'home') { %>
+      <a href="/" class="w3-bar-item w3-button">Home</a>
+      <% } %>
+      <!-- New data -->
+      <% if (nav.local !== 'sendMail') { %>
+      <a href="/sendmail" class="w3-bar-item w3-button">Send Mail</a>
+      <% } %>
+    </div>
+  </div>
+  <script>
+    function newpath() {
+      window.open("https://nodemailer.com/about/");
+    }
+  </script>
+  

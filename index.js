@@ -1,26 +1,25 @@
-const nodemailer = require('nodemailer');
-require('dotenv').config();
+const express = require("express");
+const app = express();
+const path = require("path");
 
-const transporter = nodemailer.createTransport({
-    host: "smtp.office365.com",
-    port: 587,
-    auth: {
-        user: process.env.EMAIL_USERNAME,
-        pass: process.env.EMAIL_PASSWORD
-    }
+const PORT = 3001;
+//data utilities
+const {nav} = require("./routes/data")
+
+
+app.set('view engine', 'ejs');
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.get('/', (req, res) => {
+    nav.local = 'home';
+    res.render('pages/home', { nav: nav });
 });
 
-const options = {
-    from: process.env.EMAIL_USERNAME,
-    to : "zoullata001@gmail.com",
-    subject: "testing SMTP basis sytem",
-    html: `<h1>this a test</h1>
-    <p>this is a simple SMTP system to easy send mails to people on mass</p>
-    <p>offcorse this is just the shitt start!</p>
-    `
-};
+app.get('/sendmail', (req, res) => {
+    nav.local = 'sendMail'
+    res.render('pages/sendmail', { nav: nav });
+})
 
-transporter.sendMail(options, (err, res) => {
-    if (err) return console.log(err);
-    console.log('email sent: ', res);
-});
+app.listen( PORT, () => console.log(`server running on: \nhttp://localhost:${PORT}`));
