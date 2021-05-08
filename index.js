@@ -3,6 +3,7 @@ const app = express();
 const path = require("path");
 //mailer config
 const nodemailer = require('nodemailer');
+const {mailValid} = require('./routes/middleware/emailverify');
 require('dotenv').config();
 
 const PORT = 3001;
@@ -24,7 +25,7 @@ app.get('/sendmail', (req, res) => {
     nav.local = 'sendMail'
     res.render('pages/sendmail', { nav: nav });
 })
-app.post('/send/mail', async (req, res) => {
+app.post('/send/mail', mailValid, async (req, res) => {
     console.log(req.body);
     nav.local = 'sendMail'
     const transporter = nodemailer.createTransport({
