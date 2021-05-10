@@ -3,6 +3,7 @@ const app = express();
 const path = require("path");
 //mailer config
 const nodemailer = require('nodemailer');
+const mailgun = require('nodemailer-mailgun-transport');
 const {mailValid} = require('./routes/middleware/emailverify');
 require('dotenv').config();
 
@@ -15,7 +16,15 @@ app.set('view engine', 'ejs');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
+// setting up mailgun auth
+const auth ={
+    auth: {
+        api_key: process.env.MAIL_GUN_KEY,
+        domain: process.env.MAIL_GUN_DOMAIN
+    }
+};
 
+//routes
 app.get('/', (req, res) => {
     nav.local = 'home';
     res.render('pages/home', { nav: nav });
@@ -24,20 +33,14 @@ app.get('/', (req, res) => {
 app.get('/sendmail', (req, res) => {
     nav.local = 'sendMail'
     res.render('pages/sendmail', { nav: nav });
-})
+});
+
 app.post('/send/mail', mailValid, async (req, res) => {
     console.log(req.body);
     nav.local = 'sendMail'
-    const transporter = nodemailer.createTransport({
-        host: "smtp.office365.com",
-        port: 587,
-        auth: {
-            user: process.env.EMAIL_USERNAME,
-            pass: process.env.EMAIL_PASSWORD
-        }
-    });
+    const transporter = nodemailer.createTransport(mailgun(auth));
     const options = {
-        from: process.env.EMAIL_USERNAME,
+        from: "Excited User <me@samples.mailgun.org>",
         to : req.body.send_to,
         subject: req.body.subject,
         text: req.body.message
@@ -49,6 +52,6 @@ app.post('/send/mail', mailValid, async (req, res) => {
     } catch(err){
         res.status(500).json({message: err});
     }
-})
+});
 
 app.listen( PORT, () => console.log(`server running on: \nhttp://localhost:${PORT}`));
