@@ -3,7 +3,7 @@ const app = express();
 const path = require("path");
 //mailer config
 const nodemailer = require('nodemailer');
-const mailgun = require('nodemailer-mailgun-transport');
+// const mailgun = require('nodemailer-mailgun-transport');
 const {mailValid} = require('./routes/middleware/emailverify');
 require('dotenv').config();
 
@@ -17,12 +17,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 // setting up mailgun auth
-const auth ={
-    auth: {
-        api_key: process.env.MAIL_GUN_KEY,
-        domain: process.env.MAIL_GUN_DOMAIN
-    }
-};
+// const auth ={
+//     auth: {
+//         api_key: process.env.MAIL_GUN_KEY,
+//         domain: process.env.MAIL_GUN_DOMAIN
+//     }
+// };
 
 //routes
 app.get('/', (req, res) => {
@@ -38,13 +38,22 @@ app.get('/sendmail', (req, res) => {
 app.post('/send/mail', mailValid, async (req, res) => {
     console.log(req.body);
     nav.local = 'sendMail'
-    const transporter = nodemailer.createTransport(mailgun(auth));
+
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: process.env.EMAIL_USER, // generated ethereal user
+          pass: process.env.EMAIL_PASS, // generated ethereal password
+        },
+    });
+
     const options = {
-        from: "Excited User <me@samples.mailgun.org>",
+        from: 'zoullata001@gmail.com',
         to : req.body.send_to,
         subject: req.body.subject,
         text: req.body.message
     };
+
     try{
         const send = await transporter.sendMail(options);
         if(!send) throw Error ("send mail failed !");
